@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CineList</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>CineList</h1>
+
+      <section class="filtros">
+        <input
+          type="search"
+          id="input-busca"
+          placeholder="Buscar por título..."
+        />
+        <div id="botoes-genero"></div>
+        <div class="ordenacao">
+          <button id="ordenar-nota">Ordenar por Nota</button>
+          <button id="ordenar-ano">Ordenar por Ano</button>
+        </div>
+      </section>
+
+      <main id="lista-filmes" class="grid-filmes"></main>
+
+      <hr />
+
+      <h2>Minha Lista</h2>
+      <section id="minha-lista" class="grid-filmes"></section>
+    </div>
+
+    <script src="dados_filmes.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
