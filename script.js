@@ -25,4 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
     listaFilmesElement.innerHTML = card;
   };
 
+  //Implementa a Busca por Título
+  const input = document.getElementById('input-busca');
+  input.addEventListener("input", () => {
+    const valorDoInput = input.value.trim();
+    const filmesFiltrados = filmes.filter((filme) => filme.titulo.toLowerCase().includes(valorDoInput));
+    renderizarFilmes(filmesFiltrados);
+  });
+
 });
