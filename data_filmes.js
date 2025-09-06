@@ -220,3 +220,5 @@ const filmes = [
       "Amélie é uma garçonete inocente e ingênua em Paris com seu próprio senso de justiça. Ela decide ajudar as pessoas ao seu redor e, ao longo do caminho, descobre o amor.",
   },
 ];
+
+export default filmes;
