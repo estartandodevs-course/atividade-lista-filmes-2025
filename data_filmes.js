@@ -1,4 +1,4 @@
-const filmes = [
+export const filmes = [
   {
     id: 1,
     titulo: "O Poderoso Chefão",
@@ -220,3 +220,4 @@ const filmes = [
       "Amélie é uma garçonete inocente e ingênua em Paris com seu próprio senso de justiça. Ela decide ajudar as pessoas ao seu redor e, ao longo do caminho, descobre o amor.",
   },
 ];
+
