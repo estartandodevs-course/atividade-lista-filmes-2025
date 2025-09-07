@@ -1,15 +1,165 @@
 /* Reset */
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-};
+}
 
 /* Body */
 body {
   font-family: sans-serif;
   max-width: 100vw;
+  min-height: 100vh;
   overflow-x: hidden;
+  background-color: black;
 }
 
 /* Header */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding:  1rem 0.5rem;
+}
+
+h1 {
+  font-family: "Impact", Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  color: #ffa500;
+  font-size: 3.5rem;
+  font-weight: bold;
+  letter-spacing: 0.3rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 165, 0, 0.5),
+    0 0 30px rgba(255, 165, 0, 0.3);
+  text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 165, 0, 0.7),
+    0 0 40px rgba(255, 165, 0, 0.4);
+  position: relative;
+  display: inline-block;
+  padding: 0 1rem;
+  transition: all 0.4s ease;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #ffa500, transparent);
+  border-radius: 2px;
+}
+
+/* Container filtros */
+header .filtros {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: 100%;
+}
+
+
+  /* Estilo do input */
+header .filtros input {
+    width: 80%;
+    padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background: #ffffff;
+    border: none;
+    border-radius: 15px;
+    box-shadow:
+      5px 5px 15px rgba(0, 0, 0, 0.1),
+      -5px -5px 15px rgba(255, 255, 255, 0.7),
+      inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+      inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+    outline: none;
+  }
+
+  /* Placeholder estilizado */
+header .filtros input::placeholder {
+    color: #888;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+  }
+
+
+/* Container botões de ordenação */
+.ordenacao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 80%;
+}
+
+  /* Estilo dos botões de ordenação */
+#ordenar-nota, #ordenar-ano {
+  padding: 0.3rem 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(145deg, #2c3e50, #1a1a2e);
+  border: 2px solid rgba(255, 165, 0, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 2rem;
+  text-align: center;
+  }
+
+
+/* Media Query para tablets */
+@media (min-width: 768px) {
+    
+  header {
+    flex-direction: row;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+  }
+
+/*Container Filtros */
+  header .filtros {
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    width: 80%;
+  }
+
+  /* Container botões de ordenação */
+  .ordenacao {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+    width: 30%;
+  }
+
+  /* Estilo dos botões de ordenação */
+  #ordenar-nota, #ordenar-ano {
+    padding: 0.3rem 0.35rem;
+    font-size: 0.8rem;
+    min-width: 140px;
+  }
+}
+
+/* Media Query para desktop */
+@media (min-width: 1024px) {
+
+  h1 {
+    margin-left: 5rem;
+  }
+
+  .ordenacao {
+    align-items: flex-start;
+  }
+}
