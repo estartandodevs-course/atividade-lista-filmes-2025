@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineList</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>CineList</h1>
 
-      <section class="filtros">
-        <input
-          type="search"
-          id="input-busca"
-          placeholder="Buscar por título"
-        />
-        <div id="botoes-genero"></div>
-        <div class="ordenacao">
-          <button id="ordenar-nota">Ordenar por Nota</button>
-          <button id="ordenar-ano">Ordenar por Ano</button>
-        </div>
-      </section>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineList</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-      <main id="lista-filmes" class="grid-filmes"></main>
+<body>
+  <header>
+    <h1>CineList</h1>
 
-      <hr />
+    <section class="filtros">
+      <input type="search" id="input-busca" placeholder="Buscar por título" />
+      <div id="botoes-genero"></div>
+      <div class="ordenacao">
+        <button id="ordenar-nota">Ordenar por Nota</button>
+        <button id="ordenar-ano">Ordenar por Ano</button>
+      </div>
+    </section>
+  </header>
 
-      <h2>Minha Lista</h2>
-      <section id="minha-lista" class="grid-filmes"></section>
+  <main id="lista-filmes" class="grid-filmes">
+    <hr />
 
-    <script type="module" src="script.j"></script>
-  </body>
+    <h2>Minha Lista</h2>
+    <section id="minha-lista" class="grid-filmes"></section>
+  </main>
+
+
+
+  <script type="module" src="script.j"></script>
+</body>
+
 </html>
