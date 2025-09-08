@@ -101,3 +101,9 @@ btnOrdenarAno.addEventListener("click", () => {
   filmesRenderizados.sort((a, b) => b.ano - a.ano);
   renderizarFilmes(filmesRenderizados);
 })
+
+// Coloquei a inicialização no final para que tudo seja lido primeiro, conforme dito na última aula
+document.addEventListener("DOMContentLoaded", () => {
+  gerarBotoesGeneros();
+  renderizarFilmes(filmesRenderizados);
+});
