@@ -3,12 +3,25 @@ import filmes from "./data_filmes.js";
 const listaFilmes = document.getElementById("lista-filmes");
 const minhaListaElemento = document.getElementById("minha-lista");
 const inputBusca = document.getElementById("input-busca");
-const botoesGeneroElement = document.getElementById("botoes-genero");
-const btnOrdenarNota = document.getElementById("ordenar-nota");
+const botoesGenero = document.getElementById("botoes-genero");
+const botaoOrdenarNota = document.getElementById("ordenar-nota");
 const btnOrdenarAno = document.getElementById("ordenar-ano");
 
 let filmesRenderizados = [...filmes];
 let minhaLista = [];
+
+function salvarMinhaLista() {
+  localStorage.setItem("minhaLista", JSON.stringify(minhaLista));
+}
+
+function carregarMinhaLista() {
+  const listaSalva = localStorage.getItem("minhaLista");
+  if (listaSalva) {
+    minhaLista = JSON.parse(listaSalva);
+  } else {
+    minhaLista = [];
+  }
+}
 
 function renderizarFilmes(listaParaRenderizar) {
   listaFilmes.innerHTML = "";
@@ -77,7 +90,7 @@ function gerarBotoesGeneros() {
   const generosUnicos = new Set();
   filmes.forEach((f) => f.generos.forEach((g) => generosUnicos.add(g)));
 
-  botoesGeneroElement.innerHTML = "";
+  botoesGenero.innerHTML = "";
 
   generosUnicos.forEach((genero) => {
     const btn = document.createElement("button");
@@ -88,11 +101,11 @@ function gerarBotoesGeneros() {
       );
       renderizarFilmes(filmesRenderizados);
     });
-    botoesGeneroElement.appendChild(btn);
+    botoesGenero.appendChild(btn);
   });
 }
 
-btnOrdenarNota.addEventListener("click", () => {
+botaoOrdenarNota.addEventListener("click", () => {
   filmesRenderizados.sort((a, b) => b.nota - a.nota);
   renderizarFilmes(filmesRenderizados);
 });
