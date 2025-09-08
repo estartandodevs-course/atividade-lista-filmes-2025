@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById('input-busca');
   input.addEventListener("input", () => {
     const valorDoInput = input.value.trim();
-    const filmesFiltrados = filmes.filter((filme) => filme.titulo.toLowerCase().includes(valorDoInput));
+    const filmesFiltrados = filmes.filter((filme) => filme.titulo.toLowerCase().includes(valorDoInput.toLowerCase()));
     renderizarFilmes(filmesFiltrados);
   });
 
