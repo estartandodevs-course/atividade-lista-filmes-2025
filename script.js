@@ -91,3 +91,13 @@ function gerarBotoesGeneros() {
     botoesGeneroElement.appendChild(btn);
   });
 }
+
+btnOrdenarNota.addEventListener("click", () => {
+  filmesRenderizados.sort((a, b) => b.nota - a.nota);
+  renderizarFilmes(filmesRenderizados);
+});
+
+btnOrdenarAno.addEventListener("click", () => {
+  filmesRenderizados.sort((a, b) => b.ano - a.ano);
+  renderizarFilmes(filmesRenderizados);
+})
