@@ -1,7 +1,5 @@
-/*
-Passo 1: Renderizar a Lista Inicial de Filmes
+// Passo 1: Renderizar a Lista Inicial de Filmes
 
-*/
 function renderizarFilmes(listarParaRenderizar)
 {
     const listarFilmes = document.getElementById("lista-filmes") 
@@ -21,8 +19,6 @@ function renderizarFilmes(listarParaRenderizar)
     listarFilmes.innerHTML = cards.join("");
 }
 
-
-
 // Passo 2: Implementar a Busca por Título
 
 function buscarPorTítulo(event)
@@ -36,29 +32,33 @@ function buscarPorTítulo(event)
 
 function gerarFiltrosGeneros()
 {
-    const generosUnicos = new Set();
-    filmes.forEach(filme => {
-        filme.generos.forEach(genero => generosUnicos.add(genero));
-    });
-    // const generosUnicos = [...new Set(filmes.flatMap(filme => filme.generos))].sort();
+    // const generosUnicos = new Set();
+    // filmes.forEach(filme => {
+    //     filme.generos.forEach(genero => generosUnicos.add(genero));
+    // });
+    const generosUnicos = [...new Set(filmes.flatMap(filme => filme.generos))].sort();
 
     const divBotoes = document.getElementById("botoes-genero");
+    
+    const buttonTodos = document.createElement("button");
+    buttonTodos.textContent = "Todos";
+    divBotoes.appendChild(buttonTodos);
+
     generosUnicos.forEach(genero => {
         const button = document.createElement("button");
         button.textContent = genero;
-        button.addEventListener("click", () => {
-            const filmesFiltrados = filmes.filter(filme => filme.generos.includes(genero));
-            renderizarFilmes(filmesFiltrados);
-        });
-        divBotoes.appendChild(button);
+       divBotoes.appendChild(button);
     });
 
-    const buttonTodos = document.createElement("button");
-    buttonTodos.textContent = "Todos";
-    buttonTodos.addEventListener("click", () => {
-        renderizarFilmes(filmes);
+    divBotoes.addEventListener("click", (event) => {
+        if(event.target.tagName === "BUTTON")
+        {
+            const generoSelecionado = event.target.textContent;
+            const filmesFiltrados = generoSelecionado === "Todos" ?
+            filmes : filmes.filter(filme => filme.generos.includes(generoSelecionado));
+            renderizarFilmes(filmesFiltrados);
+        }
     });
-    divBotoes.appendChild(buttonTodos);
 }
 
 // Passo 4: Implementar Ordenação
@@ -67,18 +67,17 @@ let listarParaRenderizar = [...filmes];
 
 function ordenarPorAno_E_Nota()
 {
-    const botoesOrdenarAno = document.getElementById("ordenar-ano");
-    botoesOrdenarAno.addEventListener("click", () => {
+    const botaoOrdenarAno = document.getElementById("ordenar-ano");
+    botaoOrdenarAno.addEventListener("click", () => {
         const filmesOrdenados = listarParaRenderizar.slice().sort((a, b) =>  b.ano - a.ano);
         renderizarFilmes(filmesOrdenados);
-    });
+    }); 
 
-    const buttonNota = document.getElementById("ordenar-nota");
-    buttonNota.addEventListener("click", () => {
+    const botaoNota = document.getElementById("ordenar-nota");
+    botaoNota.addEventListener("click", () => {
         const filmesOrdenados = listarParaRenderizar.slice().sort((a, b) => b.nota - a.nota);
         renderizarFilmes(filmesOrdenados);
     });
-
 }
 
 // Passo 5: Gerenciar a "Minha Lista" com localStorage
@@ -91,8 +90,8 @@ function salvarNaMinhaLista(lista)
 
 function carregarMinhaLista()
 {
-    localStorage.getItem("minhaLista");
-    return JSON.parse(localStorage.getItem("minhaLista")) || [];
+    const minhaLista = localStorage.getItem("minhaLista");
+    return JSON.parse(minhaLista) || [];
 }
 
 function adicionarFilmeEvento()
@@ -100,9 +99,9 @@ function adicionarFilmeEvento()
     const listarFilmes = document.getElementById("lista-filmes");
 
     listarFilmes.addEventListener("click", (event) => {
-        const minhaLista = carregarMinhaLista();
         if(event.target.classList.contains("btn-adicionar"))
         {
+            const minhaLista = carregarMinhaLista();
             const cardFilme = event.target.closest(".card-filme");
             const filmeId = cardFilme.id.split("-")[1];
             const filmeParaAdicionar = filmes.find(filme => filme.id === parseInt(filmeId));
@@ -161,9 +160,11 @@ function adicionarEventoRemover()
         if(event.target.classList.contains("btn-remover"))
         {
             const cardFilme = event.target.closest(".card-filme");
-            const filmeId = cardFilme.id.split("-")[3];
-            removerDaMinhaLista(parseInt(filmeId));
-            renderizarMinhaLista(minhaLista);
+            // const filmeId = cardFilme.id.split("-")[3];
+            const filmeId = parseInt(cardFilme.id.replace("minha-lista-filme-", ""));
+
+            removerDaMinhaLista(filmeId);
+            renderizarMinhaLista();
         }
     });
 
@@ -171,24 +172,25 @@ function adicionarEventoRemover()
 
 
 
-// Passo 7:  Feedback Visual: 
+// Passo 7:  Feedback Visual:  --- REFAZER
 
 function adicionarFeedbackVisual()
 {
     const listarFilmes = document.getElementById("lista-filmes");
     listarFilmes.addEventListener("click", (event) => {
         if(event.target.classList.contains("btn-adicionar"))
-        {
-            event.target.textContent = "Adicionado ✓";
-            event.target.disabled = true;
-            event.target.style.backgroundColor = "#4CAF50"; 
-            event.target.style.color = "#fff";
-            setTimeout(() => {
-                event.target.textContent = "Adicionar à Minha Lista";
-                event.target.disabled = false;
-                event.target.style.backgroundColor = ""; 
-                event.target.style.color = "";
-            }, 1000);
+        {    
+            const cardFilme = event.target.closest(".card-filme");
+            const filmeId = parseInt(cardFilme.id.replace("filme-", ""));
+            const minhaLista = carregarMinhaLista();
+            
+            if(minhaLista.some(filme => filme.id === filmeId)){
+                event.target.textContent = "Adicionado ✓";
+                event.target.disabled = true;
+                event.target.style.backgroundColor = "#4CAF50"; 
+                event.target.style.color = "#fff";
+            }
+            
         }
     });
 }
@@ -206,12 +208,12 @@ function modalDeDetalhes()
         const card = event.target.closest(".card-filme");
         if(!card) return;
 
-            const filmeId = card.id.split("-")[1];
+            // const filmeId = card.id.split("-")[1];
+            const filmeId = parseInt(card.id.replace("filme-", ""));
             const filmeDetalhes = filmes.find(filme => filme.id === parseInt(filmeId));
             
             if(filmeDetalhes)
             {
-
                 const detalhesDiv = document.createElement("div");
                 detalhesDiv.classList.add("modal");
                 detalhesDiv.innerHTML = `
@@ -224,8 +226,6 @@ function modalDeDetalhes()
                     <p>Sinopse: ${filmeDetalhes.sinopse}</p>
                 </div>`;
                 document.body.appendChild(detalhesDiv);
-
-                detalhesDiv.style.display = "block";
                 
                 const spanFechar = detalhesDiv.querySelector(".fechar");
                 spanFechar.addEventListener("click", () => {
@@ -257,13 +257,12 @@ function calcularEstatisticas()
         <p>Total de Filmes: ${totalFilmes}</p>
         <p>Nota Média: ${notaMedia}</p>
     `;
-    document.body.appendChild(estatisticasDiv);
-
 
 }
 
 
 document.addEventListener("DOMContentLoaded", () =>{
+        
     renderizarFilmes(filmes);
 
    const inputBusca = document.getElementById("input-busca");
