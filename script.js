@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Chamada de função
   renderizarFilmes(filmes);
   extrairTodosOsGenerosUnicos(filmes);
+  ordenarPorNota();
+  ordenarPorAno();
 
   // Renderiza a Lista de Filmes
   function renderizarFilmes(listaParaRenderizar) {
@@ -65,7 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Implementa filtro por gênero
     botoesDeGeneros.addEventListener("click", (event) => {
-      if (event.target.tagName === "BUTTON" && event.target.id !== "mostrar-todos") {
+      if (
+        event.target.tagName === "BUTTON" &&
+        event.target.id !== "mostrar-todos"
+      ) {
         const generoDoBotao = event.target.textContent;
         const filmeFiltradoPorGenero = generoFilme.filter((filme) =>
           filme.generos.includes(generoDoBotao)
@@ -74,5 +79,23 @@ document.addEventListener("DOMContentLoaded", () => {
         botaoMostrarTodos.style.display = "inline-block";
       }
     });
+  }
+
+  function ordenarPorNota() {
+    const botaoPorNota = document.getElementById("ordenar-nota");
+    botaoPorNota.addEventListener("click", () => {
+      const copiaLista = [...filmes];
+      const listaPorNota = copiaLista.sort((a, b) => a.nota - b.nota)
+      renderizarFilmes(listaPorNota);
+    })
+  }
+
+    function ordenarPorAno() {
+    const botaoPorAno = document.getElementById("ordenar-ano");
+    botaoPorAno.addEventListener("click", () => {
+      const copiaLista = [...filmes];
+      const listaPorAno = copiaLista.sort((a, b) => a.ano - b.ano)
+      renderizarFilmes(listaPorAno);
+    })
   }
 });
