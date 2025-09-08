@@ -63,3 +63,31 @@ function removerMinhaLista(id) {
   minhaLista = minhaLista.filter((f) => f.id !== id);
   renderizarMinhaLista();
 }
+
+inputBusca.addEventListener("input", () => {
+  const termo = inputBusca.value.toLowerCase();
+  filmesRenderizados = filmes.filter((f) =>
+    f.titulo.toLowerCase().includes(termo)
+  );
+  renderizarFilmes(filmesRenderizados);
+});
+
+
+function gerarBotoesGeneros() {
+  const generosUnicos = new Set();
+  filmes.forEach((f) => f.generos.forEach((g) => generosUnicos.add(g)));
+
+  botoesGeneroElement.innerHTML = "";
+
+  generosUnicos.forEach((genero) => {
+    const btn = document.createElement("button");
+    btn.textContent = genero;
+    btn.addEventListener("click", () => {
+      filmesRenderizados = filmes.filter((f) =>
+        f.generos.includes(genero)
+      );
+      renderizarFilmes(filmesRenderizados);
+    });
+    botoesGeneroElement.appendChild(btn);
+  });
+}
