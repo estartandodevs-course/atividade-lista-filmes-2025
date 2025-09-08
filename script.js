@@ -39,15 +39,40 @@ document.addEventListener("DOMContentLoaded", () => {
   //Implementa botões de filtros de gênero
   function extrairTodosOsGenerosUnicos(generoFilme) {
     const botoesDeGeneros = document.getElementById("botoes-genero");
-    botoesDeGeneros.innerHTML = "";
 
     const todosOsGeneros = generoFilme.flatMap((genero) => genero.generos);
-    const generosUnificados =[...new Set(todosOsGeneros)];
-    const renderizarGeneros = generosUnificados.map((genero) => {
-      const generosHTML = `<button>${genero}</button>`;
-      return generosHTML;
-    }).join("");
+    const generosUnificados = [...new Set(todosOsGeneros)];
+    const renderizarGeneros = generosUnificados
+      .map((genero) => {
+        const generosHTML = `<button>${genero}</button>`;
+        return generosHTML;
+      })
+      .join("");
 
     botoesDeGeneros.innerHTML = renderizarGeneros;
+
+    //Implementa Botão de Mostrar tudo.
+    const botaoMostrarTodos = document.createElement("button");
+    botaoMostrarTodos.textContent = "Mostrar Todos os Filmes";
+    botaoMostrarTodos.id = "mostrar-todos";
+    botaoMostrarTodos.style.display = "none";
+    botoesDeGeneros.appendChild(botaoMostrarTodos);
+
+    botaoMostrarTodos.addEventListener("click", () => {
+      renderizarFilmes(filmes);
+      botaoMostrarTodos.style.display = "none";
+    });
+
+    //Implementa filtro por gênero
+    botoesDeGeneros.addEventListener("click", (event) => {
+      if (event.target.tagName === "BUTTON" && event.target.id !== "mostrar-todos") {
+        const generoDoBotao = event.target.textContent;
+        const filmeFiltradoPorGenero = generoFilme.filter((filme) =>
+          filme.generos.includes(generoDoBotao)
+        );
+        renderizarFilmes(filmeFiltradoPorGenero);
+        botaoMostrarTodos.style.display = "inline-block";
+      }
+    });
   }
 });
