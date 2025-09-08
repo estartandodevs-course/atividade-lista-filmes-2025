@@ -117,6 +117,8 @@ btnOrdenarAno.addEventListener("click", () => {
 
 // Coloquei a inicialização no final para que tudo seja lido primeiro, conforme dito na última aula
 document.addEventListener("DOMContentLoaded", () => {
+  carregarMinhaLista();
+  renderizarMinhaLista();  
   gerarBotoesGeneros();
   renderizarFilmes(filmesRenderizados);
 });
