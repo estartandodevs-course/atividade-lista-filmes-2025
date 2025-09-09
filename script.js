@@ -6,20 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
   extrairTodosOsGenerosUnicos(filmes);
   ordenarPorNota();
   ordenarPorAno();
+  renderizarMinhaLista();
+  atualizarEstatisticas();
 
   // Renderiza a Lista de Filmes
   function renderizarFilmes(listaParaRenderizar) {
     const listaFilmesElement = document.getElementById("lista-filmes");
     listaFilmesElement.innerHTML = "";
 
+    const minhaLista = carregarMinhaLista();
+    const idsNaMinhaLista = minhaLista.map(filme => filme.id);
+
     const card = listaParaRenderizar
       .map((filme) => {
+        const estaNaMinhaLista = idsNaMinhaLista.includes(filme.id);
+        const textoBotao = estaNaMinhaLista ? "Adicionado ✓" : "Adicionar à Minha Lista";
+        const classeBotao = estaNaMinhaLista ? "btn-adicionar adicionado" : "btn-adicionar";
+        
         const cardHTML = `
-    <div class="card-filme" id="filme-${filme.id}">
+    <div class="card-filme" id="filme-${filme.id}" data-id="${filme.id}">
         <img src="${filme.posterUrl}" alt="Pôster de ${filme.titulo}">
         <h2>${filme.titulo} (${filme.ano})</h2>
         <p>Nota: ${filme.nota}</p>
-        <button class="btn-adicionar">Adicionar à Minha Lista</button>
+        <button class="${classeBotao}">${textoBotao}</button>
     </div>`;
         return cardHTML;
       })
@@ -87,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botaoPorNota = document.getElementById("ordenar-nota");
     botaoPorNota.addEventListener("click", () => {
       const copiaLista = [...filmes];
-      const listaPorNota = copiaLista.sort((a, b) => a.nota - b.nota);
+      const listaPorNota = copiaLista.sort((a, b) => b.nota - a.nota); // Ordem decrescente
       renderizarFilmes(listaPorNota);
     });
   }
@@ -97,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botaoPorAno = document.getElementById("ordenar-ano");
     botaoPorAno.addEventListener("click", () => {
       const copiaLista = [...filmes];
-      const listaPorAno = copiaLista.sort((a, b) => a.ano - b.ano);
+      const listaPorAno = copiaLista.sort((a, b) => b.ano - a.ano); // Ordem decrescente
       renderizarFilmes(listaPorAno);
     });
   }
@@ -105,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Gerenciar "minha lista"
   function salvarMinhaLista(lista) {
     localStorage.setItem("minhaLista", JSON.stringify(lista));
+    atualizarEstatisticas();
   }
 
   function carregarMinhaLista() {
@@ -115,22 +125,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderizarMinhaLista() {
     const lista = carregarMinhaLista();
     const secao = document.getElementById("minha-lista");
-    secao.innerHTML = " ";
+    secao.innerHTML = "";
 
     if (lista.length === 0) {
-      secao.innerHTML = "<p class='empty-message'>Sua lista está vazia</p>";
       return;
     }
 
     const cardsHTML = lista
       .map(
         (filme) => `
-        <div class="card-filme" id="filme-${filme.id}">
+        <div class="card-filme" id="minha-lista-filme-${filme.id}" data-id="${filme.id}">
             <img src="${filme.posterUrl}" alt="Pôster de ${filme.titulo}">
             <div class="card-content">
                 <h2>${filme.titulo} (${filme.ano})</h2>
                 <p>Nota: ${filme.nota}</p>
-                <button class="btn-adicionar">Remover da Minha Lista</button>
+                <button class="btn-remover">Remover da Minha Lista</button>
             </div>
         </div>
     `
@@ -140,15 +149,87 @@ document.addEventListener("DOMContentLoaded", () => {
     secao.innerHTML = cardsHTML;
   }
 
-  const main = document.querySelector("main");
+  // Função para atualizar estatísticas da lista
+  function atualizarEstatisticas() {
+    const minhaLista = carregarMinhaLista();
+    
+    // Verifica se o container de estatísticas já existe, se não, cria
+    let estatisticasContainer = document.getElementById("estatisticas-lista");
+    if (!estatisticasContainer) {
+      estatisticasContainer = document.createElement("div");
+      estatisticasContainer.id = "estatisticas-lista";
+      const minhaListaSection = document.getElementById("minha-lista");
+      minhaListaSection.parentNode.insertBefore(estatisticasContainer, minhaListaSection);
+    }
+    
+    if (minhaLista.length === 0) {
+      estatisticasContainer.innerHTML = "";
+      return;
+    }
+    
+    // Calcular nota média usando reduce
+    const notaMedia = minhaLista.reduce((acc, filme) => acc + filme.nota, 0) / minhaLista.length;
+    
+    estatisticasContainer.innerHTML = `
+      <div class="estatisticas">
+        <p>Filmes na lista: ${minhaLista.length}</p>
+        <p>Nota média: ${notaMedia.toFixed(1)}</p>
+      </div>
+    `;
+  }
 
+  // Criar modal para detalhes do filme
+  function criarModal() {
+    const modal = document.createElement("div");
+    modal.id = "modal-detalhes";
+    modal.className = "modal";
+    modal.innerHTML = `
+      <div class="modal-conteudo">
+        <span class="fechar-modal">&times;</span>
+        <h2 id="modal-titulo"></h2>
+        <p id="modal-sinopse"></p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Fechar modal ao clicar no X
+    modal.querySelector(".fechar-modal").addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+    
+    // Fechar modal ao clicar fora do conteúdo
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+    
+    return modal;
+  }
+
+  // Inicializar modal
+  const modal = criarModal();
+
+  // Mostrar detalhes do filme no modal
+  function mostrarDetalhesFilme(id) {
+    const filme = filmes.find(f => f.id === id);
+    if (filme) {
+      document.getElementById("modal-titulo").textContent = `${filme.titulo} (${filme.ano})`;
+      document.getElementById("modal-sinopse").textContent = `${filme.sinopse}`;
+      modal.style.display = "block";
+    }
+  }
+
+  // Adicionar/Remover da Minha Lista
+  const main = document.querySelector("main");
   main.addEventListener("click", (event) => {
+
     if (event.target.classList.contains("btn-adicionar")) {
       const card = event.target.closest(".card-filme");
 
       if (!card) return;
 
-      const idFilme = parseInt(card.id.replace("filme-", ""));
+      const idFilme = parseInt(card.dataset.id);
       const filmeSelecionado = filmes.find((filme) => filme.id === idFilme);
 
       if (!filmeSelecionado) return;
@@ -160,7 +241,31 @@ document.addEventListener("DOMContentLoaded", () => {
         listaAtual.push(filmeSelecionado);
         salvarMinhaLista(listaAtual);
         renderizarMinhaLista();
+        renderizarFilmes(filmes); // Atualiza os botões na lista principal
       }
+    }
+    
+    // Remover da Minha Lista
+    if (event.target.classList.contains("btn-remover")) {
+      const card = event.target.closest(".card-filme");
+      if (!card) return;
+
+      const idFilme = parseInt(card.dataset.id);
+      const listaAtual = carregarMinhaLista();
+      const novaLista = listaAtual.filter((filme) => filme.id !== idFilme);
+      
+      salvarMinhaLista(novaLista);
+      renderizarMinhaLista();
+      renderizarFilmes(filmes); // Atualiza os botões na lista principal
+    }
+    
+    // Mostrar detalhes do filme ao clicar no card (exceto nos botões)
+    if (event.target.closest(".card-filme") && 
+        !event.target.classList.contains("btn-adicionar") && 
+        !event.target.classList.contains("btn-remover")) {
+      const card = event.target.closest(".card-filme");
+      const idFilme = parseInt(card.dataset.id);
+      mostrarDetalhesFilme(idFilme);
     }
   });
 });
