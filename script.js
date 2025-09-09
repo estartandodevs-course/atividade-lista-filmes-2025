@@ -21,3 +21,13 @@ function renderizarFilmes(listaParaRenderizar) {
 
   listaFilmes.innerHTML = cardHTML;
 }
+
+const inputBusca = document.getElementById("input-busca");
+inputBusca.addEventListener("input", () => {
+  const termo = inputBusca.value.toLowerCase().trim();
+
+  listaAtual = filmes.filter((filme) =>
+    filme.titulo.toLowerCase().includes(termo)
+  );
+  renderizarFilmes(listaAtual);
+});
