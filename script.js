@@ -73,3 +73,38 @@ function configurarOrdenacao() {
     renderizarFilmes(copiaLista);
   });
 }
+
+function salvarMinhaLista(lista) {
+  localStorage.setItem("minhaLista", JSON.stringify(lista));
+}
+
+function carregarMinhaLista() {
+  const lista = localStorage.getItem("minhaLista");
+  return lista ? JSON.parse(lista) : [];
+}
+
+function renderizarMinhaLista() {
+  const minhaListaSection = document.getElementById("minha-lista");
+  minhaListaSection.innerHTML = "";
+
+  const lista = carregarMinhaLista();
+
+  if (lista.length === 0) {
+    minhaListaSection.innerHTML = "<p>Nenhum filme na sua lista ainda 😢</p>";
+    return;
+  }
+
+  const cards = lista
+    .map(
+      (filme) => `
+      <div class="card-filme" id="favorito-${filme.id}">
+        <img src="${filme.posterUrl}" alt="Pôster de ${filme.titulo}">
+        <h2>${filme.titulo} (${filme.ano})</h2>
+        <p>Nota: ${filme.nota}</p>
+      </div>
+    `
+    )
+    .join("");
+
+  minhaListaSection.innerHTML = cards;
+}
