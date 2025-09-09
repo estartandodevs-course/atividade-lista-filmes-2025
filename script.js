@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const generosUnificados = [...new Set(todosOsGeneros)];
     const renderizarGeneros = generosUnificados
       .map((genero) => {
-        const generosHTML = `<button>${genero}</button>`;
+        const generosHTML = `<button class="btn-genero">${genero}</button>`;
         return generosHTML;
       })
       .join("");
@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botaoMostrarTodos = document.createElement("button");
     botaoMostrarTodos.textContent = "Mostrar Todos os Filmes";
     botaoMostrarTodos.id = "mostrar-todos";
+    botaoMostrarTodos.className = "btn-genero";
     botaoMostrarTodos.style.display = "none";
     botoesDeGeneros.appendChild(botaoMostrarTodos);
 
