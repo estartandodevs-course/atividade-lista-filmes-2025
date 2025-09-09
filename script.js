@@ -31,3 +31,28 @@ inputBusca.addEventListener("input", () => {
   );
   renderizarFilmes(listaAtual);
 });
+
+function configurarFiltrosGenero() {
+  const botoesGeneroDiv = document.getElementById("botoes-genero");
+
+  const generosUnicos = [...new Set(filmes.flatMap((f) => f.generos))];
+
+  botoesGeneroDiv.innerHTML = "<button>Mostrar Todos</button>";
+  generosUnicos.forEach((genero) => {
+    const btn = document.createElement("button");
+    btn.textContent = genero;
+    botoesGeneroDiv.appendChild(btn);
+  });
+
+  botoesGeneroDiv.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      const genero = e.target.textContent;
+      if (genero === "Mostrar Todos") {
+        listaAtual = [...filmes];
+      } else {
+        listaAtual = filmes.filter((filme) => filme.generos.includes(genero));
+      }
+      renderizarFilmes(listaAtual);
+    }
+  });
+}
