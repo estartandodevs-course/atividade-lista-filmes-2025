@@ -108,3 +108,33 @@ function renderizarMinhaLista() {
 
   minhaListaSection.innerHTML = cards;
 }
+
+document.getElementById("lista-filmes").addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-adicionar")) {
+    const card = e.target.closest(".card-filme");
+    const idFilme = parseInt(card.id.replace("filme-", ""));
+
+    const filme = filmes.find((f) => f.id === idFilme);
+
+    if (filme) {
+      let listaFavoritos = carregarMinhaLista();
+
+      const jaExiste = listaFavoritos.some((f) => f.id === filme.id);
+      if (!jaExiste) {
+        listaFavoritos.push(filme);
+        salvarMinhaLista(listaFavoritos);
+        renderizarMinhaLista();
+      } else {
+        alert("Esse filme já está na sua lista! 😉");
+      }
+    }
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  listaAtual = [...filmes];
+  renderizarFilmes(listaAtual);
+  configurarFiltrosGenero();
+  configurarOrdenacao();
+  renderizarMinhaLista();
+});
