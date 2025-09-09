@@ -56,3 +56,20 @@ function configurarFiltrosGenero() {
     }
   });
 }
+
+function configurarOrdenacao() {
+  const btnNota = document.getElementById("btn-ordenar-nota");
+  const btnAno = document.getElementById("btn-ordenar-ano");
+
+  btnNota.addEventListener("click", () => {
+    const copiaLista = [...listaAtual];
+    copiaLista.sort((a, b) => b.nota - a.nota);
+    renderizarFilmes(copiaLista);
+  });
+
+  btnAno.addEventListener("click", () => {
+    const copiaLista = [...listaAtual];
+    copiaLista.sort((a, b) => b.ano - a.ano);
+    renderizarFilmes(copiaLista);
+  });
+}
