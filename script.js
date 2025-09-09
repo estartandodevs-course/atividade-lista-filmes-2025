@@ -60,7 +60,6 @@ function renderizarMinhaLista() {
 
     const btn = card.querySelector("button");
     btn.addEventListener("click", () => removerMinhaLista(filme.id));
-
     minhaListaElemento.appendChild(card);
   });
 }
@@ -68,12 +67,14 @@ function renderizarMinhaLista() {
 function adicionarMinhaLista(filme) {
   if (!minhaLista.some((f) => f.id === filme.id)) {
     minhaLista.push(filme);
+    salvarMinhaLista();
     renderizarMinhaLista();
   }
 }
 
 function removerMinhaLista(id) {
   minhaLista = minhaLista.filter((f) => f.id !== id);
+  salvarMinhaLista();
   renderizarMinhaLista();
 }
 
