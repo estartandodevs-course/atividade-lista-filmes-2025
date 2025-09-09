@@ -81,21 +81,85 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //Implementa ordenar lista por nota
   function ordenarPorNota() {
     const botaoPorNota = document.getElementById("ordenar-nota");
     botaoPorNota.addEventListener("click", () => {
       const copiaLista = [...filmes];
-      const listaPorNota = copiaLista.sort((a, b) => a.nota - b.nota)
+      const listaPorNota = copiaLista.sort((a, b) => a.nota - b.nota);
       renderizarFilmes(listaPorNota);
-    })
+    });
   }
 
-    function ordenarPorAno() {
+  //Implementa ordenar lista por ano
+  function ordenarPorAno() {
     const botaoPorAno = document.getElementById("ordenar-ano");
     botaoPorAno.addEventListener("click", () => {
       const copiaLista = [...filmes];
-      const listaPorAno = copiaLista.sort((a, b) => a.ano - b.ano)
+      const listaPorAno = copiaLista.sort((a, b) => a.ano - b.ano);
       renderizarFilmes(listaPorAno);
-    })
+    });
   }
+
+  //Gerenciar "minha lista"
+  function salvarMinhaLista(lista) {
+    localStorage.setItem("minhaLista", JSON.stringify(lista));
+  }
+
+  function carregarMinhaLista() {
+    const lista = localStorage.getItem("minhaLista");
+    return lista ? JSON.parse(lista) : [];
+  }
+
+  function renderizarMinhaLista() {
+    const lista = carregarMinhaLista();
+    const secao = document.getElementById("minha-lista");
+    secao.innerHTML = " ";
+
+    if (lista.length === 0) {
+      secao.innerHTML = "<p class='empty-message'>Sua lista está vazia</p>";
+      return;
+    }
+
+    const cardsHTML = lista
+      .map(
+        (filme) => `
+        <div class="card-filme" id="filme-${filme.id}">
+            <img src="${filme.posterUrl}" alt="Pôster de ${filme.titulo}">
+            <div class="card-content">
+                <h2>${filme.titulo} (${filme.ano})</h2>
+                <p>Nota: ${filme.nota}</p>
+                <button class="btn-adicionar">Remover da Minha Lista</button>
+            </div>
+        </div>
+    `
+      )
+      .join("");
+
+    secao.innerHTML = cardsHTML;
+  }
+
+  const main = document.querySelector("main");
+
+  main.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-adicionar")) {
+      const card = event.target.closest(".card-filme");
+
+      if (!card) return;
+
+      const idFilme = parseInt(card.id.replace("filme-", ""));
+      const filmeSelecionado = filmes.find((filme) => filme.id === idFilme);
+
+      if (!filmeSelecionado) return;
+
+      const listaAtual = carregarMinhaLista();
+      const jaExiste = listaAtual.some((filme) => filme.id === idFilme);
+
+      if (!jaExiste) {
+        listaAtual.push(filmeSelecionado);
+        salvarMinhaLista(listaAtual);
+        renderizarMinhaLista();
+      }
+    }
+  });
 });
